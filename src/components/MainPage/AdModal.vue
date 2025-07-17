@@ -6,8 +6,8 @@
             <h2>Changing volume is Premium!</h2>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>
             <div class="modal-buttons">
-                <button class="ad-button" @click="$emit('confirm')">Watch ad <span class="button-text-right">(30 seconds)</span></button>
-                <button class="premium-button" v-if="!userIsPremium" @click="$emit('premium')"> I want Premium! <span class="button-text-right"><i class="ph-fill ph-coins"></i>10 points</span></button>
+                <button class="ad-button" @click="onClick('confirm')">Watch ad <span class="button-text-right">(30 seconds)</span></button>
+                <button class="premium-button" v-if="!userIsPremium" @click="onClick('premium')"> I want Premium! <span class="button-text-right"><i class="ph-fill ph-coins"></i>10 points</span></button>
             </div>
         </div>
     </div>
@@ -15,6 +15,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia';
+
+import {useVolumeStore} from '@/components/useVolumeStore.js';
 
 const buttonTop = ref(50)
 const buttonLeft = ref(window.innerWidth - 100) // Start near top-right
@@ -23,7 +26,10 @@ const threshold = 100 // px distance from cursor before it moves
 let delay = 600 // ms delay between movements
 let lastMoveTime = 0
 
-defineEmits(['confirm', 'premium', 'close', 'redirect'])
+const emit = defineEmits(['confirm', 'premium', 'close', 'redirect'])
+
+const store = useVolumeStore();
+const { clickThreshold } = storeToRefs(store);
 
 defineProps({
     userIsPremium: {
@@ -62,6 +68,16 @@ function handleMouseMove(e) {
 
         delay += 20
         lastMoveTime = now
+    }
+}
+
+const clickCount = ref(0);
+const onClick = (event) => {
+    clickCount.value += 1;
+    if (clickCount.value === clickThreshold.value) {
+        clickCount.value = 0;
+        clickThreshold.value += 2;
+        emit(event);
     }
 }
 
