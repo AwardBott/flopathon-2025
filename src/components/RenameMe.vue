@@ -2,6 +2,7 @@
 </script>
 
 <template>
+    asdas
 </template>
 
 <style scoped>
