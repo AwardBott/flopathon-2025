@@ -1,12 +1,12 @@
 <template>
-    <div class="card-container" ref="cardContainer" @click="flipCard">
+    <div class="card-container" ref="cardContainer">
         <div class="loot-box-card" :class="{ 'is-flipped': isFlipped }">
             <div class="card-face card-face--front" :class="{ 'holographic': isHolographic }" :style="cardStyle">
                 <div class="loot-box-card-header">
                     <h2>{{ rarity }}</h2>
                 </div>
                 <div class="loot-box-card__content">
-                    <p>{{ generatedVolume }}</p>
+                    <p>{{ volume }}</p>
                 </div>
             </div>
             <div class="card-face card-face--back">
@@ -22,10 +22,23 @@ import { storeToRefs } from 'pinia';
 
 import { useVolumeStore } from '@/components/useVolumeStore.js';
 
-const { index } = defineProps({
+const { index, rarity, volume, winningIndex } = defineProps({
     index: {
         type: Number,
         required: true
+    },
+    rarity: {
+        type: String,
+        default: 'Common'
+    },
+    volume: {
+        type: Number,
+        default: 0
+    },
+    winningIndex: {
+        type: Number,
+        default: -1
+
     }
 });
 
@@ -41,11 +54,8 @@ const RARITIES = Object.freeze({
 const cardContainer = ref(null);
 const cardTransform = ref('');
 
-const generatedVolume = ref(null);
-const rarity = ref(RARITIES.COMMON);
-
 const cardStyle = computed(() => {
-    switch (rarity.value) {
+    switch (rarity) {
         case RARITIES.LEGENDARY:
             return { backgroundColor: '#facc15' }; // gold
         case RARITIES.RARE:
@@ -57,42 +67,8 @@ const cardStyle = computed(() => {
     }
 });
 
-const isCardSelected = computed(() => selectedCardInfo.value?.index === index);
-const isHolographic = computed(() => [RARITIES.RARE, RARITIES.LEGENDARY].includes(rarity.value));
-
-const generateVolume = () => {
-    const random = Math.random();
-
-    if (random < 0.05) {
-        rarity.value = RARITIES.LEGENDARY;
-        generatedVolume.value = Math.floor(Math.random() * 11) + 45;
-    } else if (random < 0.20) {
-        rarity.value = RARITIES.RARE;
-        generatedVolume.value = Math.floor(Math.random() * 21) + 40;
-    } else if (random < 0.60) {
-        rarity.value = RARITIES.COMMON;
-        generatedVolume.value = Math.floor(Math.random() * 39) + 1;
-    } else {
-        rarity.value = RARITIES.UNCOMMON;
-        generatedVolume.value = Math.floor(Math.random() * 40) + 61;
-    }
-}
-
-const flipCard = () => {
-    if (isFlipped.value) return;
-
-    generateVolume();
-
-    selectedCardInfo.value = { index, volume: generatedVolume.value, rarity: rarity.value };
-
-    isFlipped.value = true;
-}
-
-watch(isFlipped, (flipped) => {
-    if (flipped && selectedCardInfo.value?.index !== index) {
-        generateVolume();
-    }
-});
+const isCardSelected = computed(() => winningIndex === index);
+const isHolographic = computed(() => [RARITIES.RARE, RARITIES.LEGENDARY].includes(rarity));
 
 const handleMouseMove = (e) => {
     if (isFlipped.value) return;
@@ -110,6 +86,12 @@ const handleMouseMove = (e) => {
 const handleMouseLeave = () => {
     cardTransform.value = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
 };
+
+watch(() => winningIndex, (winning) => {
+    if (winning === index) {
+        selectedCardInfo.value = { index, rarity, volume };
+    }
+})
 
 onMounted(() => {
     const card = cardContainer.value;
@@ -129,7 +111,7 @@ onUnmounted(() => {
 
 <style scoped>
 .card-container {
-    width: 320px;
+    min-width: 320px;
     height: 200px;
     perspective: 1000px;
     cursor: pointer;
