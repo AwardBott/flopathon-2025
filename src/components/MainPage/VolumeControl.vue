@@ -34,6 +34,7 @@ import { ref } from 'vue';
 import AdModal from './AdModal.vue';
 import PremiumModal from '@/components/MainPage/PremiumModal.vue';
 import { useVolumeStore } from '@/components/useVolumeStore.js';
+import {storeToRefs} from 'pinia'
 
 const volume = ref(0)
 const showModal = ref(false)
