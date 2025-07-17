@@ -1,6 +1,6 @@
 ﻿<template>
-    <div class="modal-backdrop">
-        <div class="modal">
+    <div class="modal-backdrop" @click.self="$emit('redirect')">
+        <div class="modal" @click.self="$emit('redirect')">
             <button class="close-button" @click="$emit('close')">×</button>
 
             <h2>🎉 Congrats on getting Premium</h2>
@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-defineEmits(['close'])
+defineEmits(['close', 'redirect'])
 </script>
 
 <style scoped>

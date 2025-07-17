@@ -1,20 +1,27 @@
 ﻿<template>
-    <div class="modal-backdrop">
-        <div class="modal">
+    <div class="modal-backdrop" @click.self="$emit('redirect')">
+        <div class="modal" @click.self="$emit('redirect')">
             <button class="close-button" @click="$emit('close')">×</button>
 
             <h1>Changing volume is Premium!</h1>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>
             <div class="modal-buttons">
                 <button @click="$emit('confirm')">Watch 30s ad</button>
-                <button @click="$emit('premium')">I want Premium! (10 points)</button>
+                <button v-if="!userIsPremium" @click="$emit('premium')">I want Premium! (10 points)</button>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-defineEmits(['confirm', 'premium', 'close'])
+defineEmits(['confirm', 'premium', 'close', 'redirect'])
+
+defineProps({
+    userIsPremium: {
+        type: Boolean,
+        default: false,
+    }
+})
 </script>
 
 <style scoped>

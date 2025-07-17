@@ -19,11 +19,13 @@
         </div>
         <ad-modal
             v-if="showModal"
+            :user-is-premium="userIsPremium"
+            @redirect="missedCloseButton"
             @confirm="confirmVolumeChange"
             @premium="onClickPremium"
             @close="showModal = false"
         />
-        <premium-modal v-if="showPremiumModal" @close="showPremiumModal = false" />
+        <premium-modal v-if="showPremiumModal" @close="showPremiumModal = false" @redirect="missedCloseButton" />
     </div>
 </template>
 
@@ -57,6 +59,10 @@ function onClickPremium() {
     showModal.value = false;
     userIsPremium.value = true;
     showPremiumModal.value = true;
+}
+
+const missedCloseButton = () => {
+    window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1', '_blank')
 }
 
 
