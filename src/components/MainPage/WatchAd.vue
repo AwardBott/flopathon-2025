@@ -82,7 +82,7 @@ function handleMouseMove(e) {
 
 <template>
   <div class="ad-page" @mousemove="handleMouseMove" @click.self="missedCloseButton">
-      <button v-if="showExitIcon" class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="isViewingAd = false">×</button>
+      <button v-if="showExitIcon" tabindex="-1" class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="isViewingAd = false">×</button>
     <video ref="videoRef" :key="selectedVideo" :src="selectedVideo" @ended="videoHasEnded" />
   </div>
 </template>
