@@ -6,7 +6,7 @@ export const useVolumeStore = defineStore('volumeStore',() => {
   const route = useRoute();
 
   const router = useRouter()
-  const userIsPremium = ref(false);
+  const userIsPremium = ref(true);
   const isViewingAd = ref(false);
   const volume = ref(0);
 
