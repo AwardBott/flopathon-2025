@@ -41,4 +41,8 @@ header {
   background-color: #666666;
   font-size: 1.8em;
 }
+
+body, html {
+  box-sizing: border-box;
+}
 </style>
