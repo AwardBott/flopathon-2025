@@ -17,8 +17,8 @@
                     v-for="(card, index) in cards"
                     :index="index"
                     :key="card.id"
-                    :rarity="buttonDisabled ? getFakeRarity() : card.rarity"
-                    :volume="buttonDisabled ? getFakeVolume() : card.volume"
+                    :rarity="buttonDisabled ? getFakeRarity().rarity : card.rarity"
+                    :volume="buttonDisabled ? getFakeRarity().volume : card.volume"
                     :winningIndex="winningIndex"
                 />
             </div>
@@ -50,7 +50,8 @@ const cardsStyle = ref({
     transition: 'none'
 });
 
-const { isFlipped, selectedCardInfo, volume } = storeToRefs(useVolumeStore());
+const store = useVolumeStore();
+const { isFlipped, selectedCardInfo, volume } = storeToRefs(store);
 
 const RARITIES = Object.freeze({
     COMMON: 'Common',
@@ -89,31 +90,27 @@ const generateCardData = () => {
 
 const getFakeRarity = () => {
     const random = Math.random();
+    let rarity, volume;
 
-    if (random < 0.50) {
-        return RARITIES.LEGENDARY;
-    } else if (random < 0.70) {
-        return RARITIES.RARE;
-    } else if (random < 0.80) {
-        return RARITIES.UNCOMMON;
+    if (random < 0.20) {
+        // 3% chance for Legendary (best volume)
+        rarity = RARITIES.LEGENDARY;
+        volume = Math.floor(Math.random() * 11) + 45; // 45-55
+    } else if (random < 0.40) {
+        // 12% chance for Rare (good volume)
+        rarity = RARITIES.RARE;
+        volume = Math.floor(Math.random() * 16) + 55; // 55-70
+    } else if (random < 0.60) {
+        // 25% chance for Uncommon (decent volume)
+        rarity = RARITIES.UNCOMMON;
+        volume = Math.floor(Math.random() * 26) + 75; // 75-100
     } else {
-        return RARITIES.COMMON;
+        // 60% chance for Common (annoying volume)
+        rarity = RARITIES.COMMON;
+        volume = Math.floor(Math.random() * 25) + 1; // 1-25
     }
-};
-
-const getFakeVolume = (rarity) => {
-    switch(rarity) {
-        case RARITIES.LEGENDARY:
-            return Math.floor(Math.random() * 11) + 45; // 45-55
-        case RARITIES.RARE:
-            return Math.floor(Math.random() * 16) + 55; // 55-70
-        case RARITIES.UNCOMMON:
-            return Math.floor(Math.random() * 26) + 75; // 75-100
-        case RARITIES.COMMON:
-        default:
-            return Math.floor(Math.random() * 25) + 1; // 1-25
-    }
-};
+    return { rarity, volume };
+}
 
 const spinCards = () => {
     if (buttonDisabled.value) return;
@@ -161,6 +158,7 @@ const resetCards = () => {
     buttonDisabled.value = true;
     isFlipped.value = false;
     volume.value = selectedCardInfo.value.volume;
+    store.setAdTimeout();
     router.push('/');
     winningIndex.value = -1;
     let cardData = [];
