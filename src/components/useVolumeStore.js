@@ -31,12 +31,15 @@ export const useVolumeStore = defineStore('volumeStore',() => {
     }, userIsPremium ? 15000 : 10000);
   }
 
+  const clickThreshold = ref(2);
+
   return {
     userIsPremium,
     isFlipped,
     selectedCardInfo,
     isViewingAd,
     volume,
-    setAdTimeout
+    setAdTimeout,
+    clickThreshold,
   }
 });
