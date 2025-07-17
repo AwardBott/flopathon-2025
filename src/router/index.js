@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {useVolumeStore} from '@/components/useVolumeStore.js'
-import WatchAd from '../components/MainPage/WatchAd.vue'
+import FlipFlop from '@/components/FlipFlop.vue'
+import AdsAndLootBoxes from '@/components/MainPage/AdsAndLootBoxes.vue'
 
 
 const componentFiles = import.meta.glob('../components/*.vue')
@@ -9,7 +10,7 @@ const dynamicRoutes = Object.keys(componentFiles)
   .map((path) => {
     const componentName = path.split('/').pop().replace('.vue', '')
 
-    if (componentName === 'HomeView') return null
+    if (componentName === 'FlipFlop') return null
 
     const routePath = '/' + componentName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
 
@@ -30,7 +31,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => ('../components/HomeView.vue'),
+      component: FlipFlop,
       meta: {
         displayName: 'Home',
       },
@@ -38,18 +39,18 @@ const router = createRouter({
     {
       path: '/ad',
       name: 'ad',
-      component: WatchAd,
+      component: AdsAndLootBoxes,
       meta: {
         displayName: 'Advertisement',
       }
     },
-    ...dynamicRoutes,
   ],
 })
 router.beforeEach((to, from, next) => {
   const store = useVolumeStore()
   if (store.isViewingAd) {
     if (to.path === '/ad') {
+      next()
     } else {
       next('/ad');
     }

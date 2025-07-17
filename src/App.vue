@@ -9,13 +9,13 @@ const routes = router.options.routes
 </script>
 
 <template>
-  <header>
-    <nav class="main-nav">
-      <RouterLink v-for="route in routes" :key="route.name" :to="route.path">
-        {{ route.meta?.displayName || route.name }}
-      </RouterLink>
-    </nav>
-  </header>
+<!--  <header>-->
+<!--    <nav class="main-nav">-->
+<!--      <RouterLink v-for="route in routes" :key="route.name" :to="route.path">-->
+<!--        {{ route.meta?.displayName || route.name }}-->
+<!--      </RouterLink>-->
+<!--    </nav>-->
+<!--  </header>-->
 
   <RouterView />
 </template>

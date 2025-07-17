@@ -5,7 +5,8 @@
             <p class="video-text">Video Placeholder</p>
         </div>
 
-        <div class="controls">
+        <div class="controls"                 @mousedown="openModal"
+        >
             <label for="volume">Volume</label>
             <input
                 type="range"
@@ -13,7 +14,6 @@
                 max="100"
                 step="1"
                 :value="volume"
-                @mousedown="openModal"
             />
             <span>{{ Math.round(volume) }}%</span>
         </div>
@@ -36,15 +36,13 @@ import AdModal from './AdModal.vue';
 import PremiumModal from '@/components/MainPage/PremiumModal.vue';
 import { useVolumeStore } from '@/components/useVolumeStore.js';
 
-const volume = ref(0)
 const showModal = ref(false)
 const showPremiumModal = ref(false);
 
-const store = useVolumeStore()
-const { userIsPremium, isViewingAd } = storeToRefs(store);
+const { userIsPremium, isViewingAd, volume } = storeToRefs(useVolumeStore());
 
 const openModal = () => {
-    volume.value = 0;
+    // volume.value = 0;
     showModal.value = true;
 }
 
