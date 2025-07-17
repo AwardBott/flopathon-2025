@@ -20,7 +20,7 @@
         <ad-modal
             v-if="showModal"
             @confirm="confirmVolumeChange"
-            @cancel="cancelVolumeChange"
+            @premium="onClickPremium"
         />
     </div>
 </template>
@@ -43,8 +43,8 @@ function confirmVolumeChange() {
     alert("Confirmed volume change")
 }
 
-function cancelVolumeChange() {
-    showModal.value = false
+function onClickPremium() {
+    window.open('https://buy.stripe.com/test_3cIdRa7uh1ew5yWc046AM00', '_blank')
 }
 </script>
 

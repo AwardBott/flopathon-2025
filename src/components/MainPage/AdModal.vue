@@ -1,23 +1,18 @@
 ﻿<template>
-    <div class="modal-backdrop" @click.self="onCancel">
+    <div class="modal-backdrop">
         <div class="modal">
             <h1>Changing volume is Premium!</h1>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>
             <div class="modal-buttons">
                 <button @click="$emit('confirm')">Watch 30s ad</button>
-                <button @click="$emit('cancel')">I want Premium! (10 points)</button>
+                <button @click="$emit('premium')">I want Premium! (10 points)</button>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-defineEmits(['confirm', 'cancel'])
-
-function onCancel() {
-    // Optional: click outside to cancel
-    emit('cancel')
-}
+defineEmits(['confirm', 'premium'])
 </script>
 
 <style scoped>
