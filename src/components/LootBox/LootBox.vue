@@ -25,13 +25,14 @@
             <i class="loot-box__icon ph-hand-pointing"></i>
         </div>
         <button v-if="!isFlipped || buttonDisabled" :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="spinCards">Spin!</button>
-        <button v-else :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="resetCards">Respin!</button>
+        <button v-else :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="resetCards">Accept!</button>
     </div>
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
+import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
 import LootBoxCard from '@/components/LootBox/LootBoxCard.vue';
 import { useVolumeStore } from '@/components/useVolumeStore.js';
@@ -40,6 +41,8 @@ const cardCount = 50;
 const cardWidth = 320;
 const cardGap = 24;
 
+const router = useRouter();
+
 const initialCards = ref([]);
 const cards = ref([]);
 const cardsStyle = ref({
@@ -47,7 +50,7 @@ const cardsStyle = ref({
     transition: 'none'
 });
 
-const { isFlipped, selectedCardInfo } = storeToRefs(useVolumeStore());
+const { isFlipped, selectedCardInfo, volume } = storeToRefs(useVolumeStore());
 
 const RARITIES = Object.freeze({
     COMMON: 'Common',
@@ -125,10 +128,14 @@ const spinCards = () => {
     }, 500);
 };
 
-const resetCards = () => {
+const resetCards = (accept = false) => {
     if (buttonDisabled.value) return;
     buttonDisabled.value = true;
     isFlipped.value = false;
+    volume.value = selectedCardInfo.value.volume;
+    if (accept) {
+        router.push('/');
+    }
     winningIndex.value = -1;
     let cardData = [];
      for (let i = 0; i < 4; i++) {
