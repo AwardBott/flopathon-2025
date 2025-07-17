@@ -5,10 +5,7 @@
             <h1>Loot Box</h1>
         </div>
         <div class="loot-box__cards">
-            <loot-box-card />
-            <loot-box-card />
-            <loot-box-card />
-            <loot-box-card />
+            <loot-box-card v-for="i in 4" :key="i" :index="i" />
         </div>
 
     </div>

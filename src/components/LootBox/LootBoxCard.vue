@@ -1,7 +1,7 @@
 <template>
-    <div class="card-container" @click="flipCard">
+    <div class="card-container" ref="cardContainer" @click="flipCard">
         <div class="loot-box-card" :class="{ 'is-flipped': isFlipped }">
-            <div class="card-face card-face--front" :style="cardStyle">
+            <div class="card-face card-face--front" :class="{ 'holographic': isHolographic }" :style="cardStyle">
                 <div class="loot-box-card-header">
                     <h2>{{ rarity }}</h2>
                 </div>
@@ -17,18 +17,31 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import { useVolumeStore } from '@/components/useVolumeStore.js';
+
+const { index } = defineProps({
+    index: {
+        type: Number,
+        required: true
+    }
+});
+
+const { isFlipped, selectedCardInfo } = storeToRefs(useVolumeStore());
 
 const RARITIES = Object.freeze({
     COMMON: 'Common',
     UNCOMMON: 'Uncommon',
     RARE: 'Rare',
     LEGENDARY: 'Legendary'
-})
+});
 
-const isFlipped = ref(false);
+const cardContainer = ref(null);
+const cardTransform = ref('');
 
-const generatedVolume = ref(0);
+const generatedVolume = ref(null);
 const rarity = ref(RARITIES.COMMON);
 
 const cardStyle = computed(() => {
@@ -44,12 +57,10 @@ const cardStyle = computed(() => {
     }
 });
 
-const flipCard = () => {
-    if (isFlipped.value) return;
-    isFlipped.value = true;
-}
+const isCardSelected = computed(() => selectedCardInfo.value?.index === index);
+const isHolographic = computed(() => [RARITIES.RARE, RARITIES.LEGENDARY].includes(rarity.value));
 
-onMounted(() => {
+const generateVolume = () => {
     const random = Math.random();
 
     if (random < 0.05) {
@@ -65,6 +76,53 @@ onMounted(() => {
         rarity.value = RARITIES.UNCOMMON;
         generatedVolume.value = Math.floor(Math.random() * 40) + 61;
     }
+}
+
+const flipCard = () => {
+    if (isFlipped.value) return;
+
+    generateVolume();
+
+    selectedCardInfo.value = { index, volume: generatedVolume.value, rarity: rarity.value };
+
+    isFlipped.value = true;
+}
+
+watch(isFlipped, (flipped) => {
+    if (flipped && selectedCardInfo.value?.index !== index) {
+        generateVolume();
+    }
+});
+
+const handleMouseMove = (e) => {
+    if (isFlipped.value) return;
+    const card = cardContainer.value;
+    const { width, height, left, top } = card.getBoundingClientRect();
+    const x = e.clientX - left;
+    const y = e.clientY - top;
+
+    const rotateX = -1 * ((y - height / 2) / (height / 2)) * 10;
+    const rotateY = ((x - width / 2) / (width / 2)) * 10;
+
+    cardTransform.value = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+};
+
+const handleMouseLeave = () => {
+    cardTransform.value = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+};
+
+onMounted(() => {
+    const card = cardContainer.value;
+    card.addEventListener('mousemove', handleMouseMove);
+    card.addEventListener('mouseleave', handleMouseLeave);
+});
+
+onUnmounted(() => {
+    const card = cardContainer.value;
+    if (card) {
+        card.removeEventListener('mousemove', handleMouseMove);
+        card.removeEventListener('mouseleave', handleMouseLeave);
+    }
 });
 
 </script>
@@ -75,6 +133,8 @@ onMounted(() => {
     height: 200px;
     perspective: 1000px;
     cursor: pointer;
+    transform: v-bind('cardTransform');
+    transition: transform 0.1s ease;
 }
 
 .loot-box-card {
@@ -97,16 +157,18 @@ onMounted(() => {
     backface-visibility: hidden;
     border: 1px solid #ccc;
     border-radius: 8px;
+    border: v-bind('isCardSelected ? "4px solid #4b5563" : "none"');
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 16px;
     box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0); /* Add this line */
 }
 
 .card-face--front {
-    /* The front face is initially hidden on the other side */
     transform: rotateY(180deg);
 }
 
@@ -122,5 +184,66 @@ onMounted(() => {
 .loot-box-card__content {
     font-size: 2.5em;
     color: #333;
+}
+
+.holographic::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        125deg,
+        rgba(255, 0, 0, 0.2) 10%,
+        rgba(255, 255, 0, 0.2) 25%,
+        rgba(0, 255, 0, 0.2) 40%,
+        rgba(0, 255, 255, 0.2) 55%,
+        rgba(0, 0, 255, 0.2) 70%,
+        rgba(255, 0, 255, 0.2) 85%,
+        rgba(255, 0, 0, 0.2) 100%
+    );
+    background-size: 200% 200%;
+    mix-blend-mode: color-dodge;
+    pointer-events: none;
+    z-index: 1;
+    animation: holographicShimmer 3s linear infinite;
+}
+
+.holographic::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.1) 2px,
+            rgba(255, 255, 255, 0.1) 4px
+        );
+    pointer-events: none;
+    z-index: 2;
+}
+
+.holographic h2,
+.holographic .loot-box-card__content {
+    position: relative;
+    z-index: 3;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes holographicAnimation {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+@keyframes holographicShimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 </style>
