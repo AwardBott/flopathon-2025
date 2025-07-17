@@ -71,7 +71,6 @@ const isCardSelected = computed(() => winningIndex === index);
 const isHolographic = computed(() => [RARITIES.RARE, RARITIES.LEGENDARY].includes(rarity));
 
 const handleMouseMove = (e) => {
-    if (isFlipped.value) return;
     const card = cardContainer.value;
     const { width, height, left, top } = card.getBoundingClientRect();
     const x = e.clientX - left;
@@ -114,7 +113,6 @@ onUnmounted(() => {
     min-width: 320px;
     height: 200px;
     perspective: 1000px;
-    cursor: pointer;
     transform: v-bind('cardTransform');
     transition: transform 0.1s ease;
 }

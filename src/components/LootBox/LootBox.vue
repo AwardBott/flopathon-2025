@@ -22,7 +22,7 @@
                     :winningIndex="winningIndex"
                 />
             </div>
-            <div class="ph ph-hand-pointing"></div>
+            <i class="loot-box__icon ph-hand-pointing"></i>
         </div>
         <button v-if="!isFlipped || buttonDisabled" :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="spinCards">Spin!</button>
         <button v-else :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="resetCards">Respin!</button>
@@ -64,22 +64,22 @@ const generateCardData = () => {
     const random = Math.random();
     let rarity, volume;
 
-    if (random < 0.05) {
-        // 5% chance for Legendary (best volume)
+    if (random < 0.03) {
+        // 3% chance for Legendary (best volume)
         rarity = RARITIES.LEGENDARY;
         volume = Math.floor(Math.random() * 11) + 45; // 45-55
     } else if (random < 0.15) {
-        // 10% chance for Rare (good volume)
+        // 12% chance for Rare (good volume)
         rarity = RARITIES.RARE;
-        volume = Math.floor(Math.random() * 21) + 40; // 40-60
+        volume = Math.floor(Math.random() * 16) + 55; // 55-70
     } else if (random < 0.40) {
         // 25% chance for Uncommon (decent volume)
         rarity = RARITIES.UNCOMMON;
-        volume = Math.floor(Math.random() * 40) + 61; // 61-100
+        volume = Math.floor(Math.random() * 26) + 75; // 75-100
     } else {
         // 60% chance for Common (annoying volume)
         rarity = RARITIES.COMMON;
-        volume = Math.floor(Math.random() * 39) + 1; // 1-39
+        volume = Math.floor(Math.random() * 25) + 1; // 1-25
     }
     return { rarity, volume };
 };
@@ -96,8 +96,6 @@ const spinCards = () => {
     setTimeout(() => {
         const containerWidth = 800;
         const winningCardIndex = 25;
-
-        winningIndex.value = winningCardIndex;
 
         const totalWinningIndex = initialCards.value.length + winningCardIndex;
         const winningCardCenter = (totalWinningIndex * (cardWidth + cardGap)) + (cardWidth / 2);
@@ -120,6 +118,7 @@ const spinCards = () => {
             // Enable the button after the animation completes (5 seconds)
             setTimeout(() => {
                 buttonDisabled.value = false;
+                winningIndex.value = winningCardIndex;
                 selectedCardInfo.value = cards.value[winningCardIndex];
             }, 5000);
         });
@@ -211,6 +210,13 @@ onMounted(() => {
     border-radius: 8px;
     font-size: 1.5em;
     cursor: pointer;
+}
+
+.loot-box__icon {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 50px;
 }
 
 .is-disabled {

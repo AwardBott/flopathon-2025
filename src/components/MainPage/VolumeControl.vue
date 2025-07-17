@@ -31,6 +31,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import AdModal from './AdModal.vue';
 import PremiumModal from '@/components/MainPage/PremiumModal.vue';
 import { useVolumeStore } from '@/components/useVolumeStore.js';
