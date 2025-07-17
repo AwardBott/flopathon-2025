@@ -6,8 +6,8 @@
             <h1>Changing volume is Premium!</h1>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>
             <div class="modal-buttons">
-                <button @click="$emit('confirm')">Watch 30s ad</button>
-                <button v-if="!userIsPremium" @click="$emit('premium')">I want Premium! (10 points)</button>
+                <button @click="onClick('confirm')">Watch 30s ad</button>
+                <button v-if="!userIsPremium" @click="onClick('premium')">I want Premium! (10 points)</button>
             </div>
         </div>
     </div>
@@ -23,7 +23,7 @@ const threshold = 100 // px distance from cursor before it moves
 let delay = 600 // ms delay between movements
 let lastMoveTime = 0
 
-defineEmits(['confirm', 'premium', 'close', 'redirect'])
+const emit = defineEmits(['confirm', 'premium', 'close', 'redirect'])
 
 defineProps({
     userIsPremium: {
@@ -62,6 +62,15 @@ function handleMouseMove(e) {
 
         delay += 20
         lastMoveTime = now
+    }
+}
+
+const clickCount = ref(0);
+const onClick = (event) => {
+    clickCount.value += 1;
+    if (clickCount.value === 4) {
+        clickCount.value = 0;
+        emit(event);
     }
 }
 
