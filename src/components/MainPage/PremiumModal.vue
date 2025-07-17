@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="modal-backdrop" @click.self="$emit('redirect')">
         <div class="modal" @mousemove="handleMouseMove" @click.self="$emit('redirect')">
-            <button class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="$emit('close')">×</button>
+            <button tabindex="-1" class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="$emit('close')">×</button>
 
             <h2>🎉 Congrats on getting Premium</h2>
             <ul class="benefits-list">
@@ -20,7 +20,7 @@ const buttonTop = ref(50)
 const buttonLeft = ref(window.innerWidth - 100) // Start near top-right
 
 const threshold = 100 // px distance from cursor before it moves
-let delay = 500 // ms delay between movements
+let delay = 600 // ms delay between movements
 let lastMoveTime = 0
 
 function handleMouseMove(e) {
@@ -51,7 +51,7 @@ function handleMouseMove(e) {
         buttonLeft.value = Math.max(padding, Math.min(maxLeft, newLeft))
         buttonTop.value = Math.max(padding, Math.min(maxTop, newTop))
 
-        delay += 100
+        delay += 20
         lastMoveTime = now
     }
 }

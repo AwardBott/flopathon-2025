@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="modal-backdrop" @click.self="$emit('redirect')">
         <div class="modal" @mousemove="handleMouseMove" @click.self="$emit('redirect')">
-            <button class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="$emit('close')">×</button>
+            <button tabindex="-1" class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="$emit('close')">×</button>
 
             <h2>Changing volume is Premium!</h2>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>
@@ -15,6 +15,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia';
+
+import {useVolumeStore} from '@/components/useVolumeStore.js';
 
 const buttonTop = ref(50)
 const buttonLeft = ref(window.innerWidth - 100) // Start near top-right
@@ -24,6 +27,9 @@ let delay = 600 // ms delay between movements
 let lastMoveTime = 0
 
 const emit = defineEmits(['confirm', 'premium', 'close', 'redirect'])
+
+const store = useVolumeStore();
+const { clickThreshold } = storeToRefs(store);
 
 defineProps({
     userIsPremium: {
@@ -68,8 +74,9 @@ function handleMouseMove(e) {
 const clickCount = ref(0);
 const onClick = (event) => {
     clickCount.value += 1;
-    if (clickCount.value === 4) {
+    if (clickCount.value === clickThreshold.value) {
         clickCount.value = 0;
+        clickThreshold.value += 2;
         emit(event);
     }
 }

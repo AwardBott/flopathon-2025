@@ -6,7 +6,7 @@ export const useVolumeStore = defineStore('volumeStore',() => {
   const route = useRoute();
 
   const router = useRouter()
-  const userIsPremium = ref(true);
+  const userIsPremium = ref(false);
   const isViewingAd = ref(false);
   const volume = ref(0);
   const isTimerActive = ref(false);
@@ -37,6 +37,8 @@ export const useVolumeStore = defineStore('volumeStore',() => {
     }, timerAmount);
   }
 
+  const clickThreshold = ref(2);
+
   return {
     userIsPremium,
     isFlipped,
@@ -46,5 +48,6 @@ export const useVolumeStore = defineStore('volumeStore',() => {
     setAdTimeout,
     isTimerActive,
     currentTimer,
+    clickThreshold,
   }
 });
