@@ -6,9 +6,8 @@
             <h2>🎉 Congrats on getting Premium</h2>
             <ul class="benefits-list">
                 <li>🔊 Boosted control time 10s => 15s</li>
-                <li>🚫 Ads</li>
+                <li>✅ Ads</li>
                 <li>💾 No custom settings</li>
-                <li>🎨 Access to exclusive theme</li>
             </ul>
         </div>
     </div>

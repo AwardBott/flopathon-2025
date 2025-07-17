@@ -17,21 +17,22 @@
                     v-for="(card, index) in cards"
                     :index="index"
                     :key="card.id"
-                    :rarity="card.rarity"
-                    :volume="card.volume"
+                    :rarity="buttonDisabled ? getFakeRarity() : card.rarity"
+                    :volume="buttonDisabled ? getFakeVolume() : card.volume"
                     :winningIndex="winningIndex"
                 />
             </div>
             <i class="loot-box__icon ph-hand-pointing"></i>
         </div>
         <button v-if="!isFlipped || buttonDisabled" :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="spinCards">Spin!</button>
-        <button v-else :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="resetCards">Respin!</button>
+        <button v-else :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="resetCards">Accept!</button>
     </div>
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
+import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
 import LootBoxCard from '@/components/LootBox/LootBoxCard.vue';
 import { useVolumeStore } from '@/components/useVolumeStore.js';
@@ -40,6 +41,8 @@ const cardCount = 50;
 const cardWidth = 320;
 const cardGap = 24;
 
+const router = useRouter();
+
 const initialCards = ref([]);
 const cards = ref([]);
 const cardsStyle = ref({
@@ -47,7 +50,7 @@ const cardsStyle = ref({
     transition: 'none'
 });
 
-const { isFlipped, selectedCardInfo } = storeToRefs(useVolumeStore());
+const { isFlipped, selectedCardInfo, volume } = storeToRefs(useVolumeStore());
 
 const RARITIES = Object.freeze({
     COMMON: 'Common',
@@ -64,11 +67,11 @@ const generateCardData = () => {
     const random = Math.random();
     let rarity, volume;
 
-    if (random < 0.03) {
+    if (random < 0.01) {
         // 3% chance for Legendary (best volume)
         rarity = RARITIES.LEGENDARY;
         volume = Math.floor(Math.random() * 11) + 45; // 45-55
-    } else if (random < 0.15) {
+    } else if (random < 0.05) {
         // 12% chance for Rare (good volume)
         rarity = RARITIES.RARE;
         volume = Math.floor(Math.random() * 16) + 55; // 55-70
@@ -82,6 +85,34 @@ const generateCardData = () => {
         volume = Math.floor(Math.random() * 25) + 1; // 1-25
     }
     return { rarity, volume };
+};
+
+const getFakeRarity = () => {
+    const random = Math.random();
+
+    if (random < 0.50) {
+        return RARITIES.LEGENDARY;
+    } else if (random < 0.70) {
+        return RARITIES.RARE;
+    } else if (random < 0.80) {
+        return RARITIES.UNCOMMON;
+    } else {
+        return RARITIES.COMMON;
+    }
+};
+
+const getFakeVolume = (rarity) => {
+    switch(rarity) {
+        case RARITIES.LEGENDARY:
+            return Math.floor(Math.random() * 11) + 45; // 45-55
+        case RARITIES.RARE:
+            return Math.floor(Math.random() * 16) + 55; // 55-70
+        case RARITIES.UNCOMMON:
+            return Math.floor(Math.random() * 26) + 75; // 75-100
+        case RARITIES.COMMON:
+        default:
+            return Math.floor(Math.random() * 25) + 1; // 1-25
+    }
 };
 
 const spinCards = () => {
@@ -129,6 +160,8 @@ const resetCards = () => {
     if (buttonDisabled.value) return;
     buttonDisabled.value = true;
     isFlipped.value = false;
+    volume.value = selectedCardInfo.value.volume;
+    router.push('/');
     winningIndex.value = -1;
     let cardData = [];
      for (let i = 0; i < 4; i++) {
