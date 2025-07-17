@@ -8,22 +8,44 @@
         <div class="controls">
             <label for="volume">Volume</label>
             <input
-                id="volume"
                 type="range"
                 min="0"
-                max="1"
-                step="0.01"
-                v-model="volume"
+                max="100"
+                step="1"
+                :value="volume"
+                @mousedown="openModal"
             />
-            <span>{{ Math.round(volume * 100) }}%</span>
+            <span>{{ Math.round(volume) }}%</span>
         </div>
+        <ad-modal
+            v-if="showModal"
+            @confirm="confirmVolumeChange"
+            @cancel="cancelVolumeChange"
+        />
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 
-const volume = ref(1.0)
+import AdModal from './AdModal.vue'
+
+const volume = ref(100)
+const showModal = ref(false)
+
+const openModal = () => {
+    volume.value = 100;
+    showModal.value = true;
+}
+
+function confirmVolumeChange() {
+    showModal.value = false
+    alert("Confirmed volume change")
+}
+
+function cancelVolumeChange() {
+    showModal.value = false
+}
 </script>
 
 <style scoped>

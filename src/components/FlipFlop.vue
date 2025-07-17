@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import VolumeControl from './VolumeControl.vue'
+import VolumeControl from './MainPage/VolumeControl.vue'
 </script>
 
 <style scoped>
