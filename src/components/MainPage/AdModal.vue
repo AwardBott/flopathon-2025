@@ -20,7 +20,7 @@ const buttonTop = ref(50)
 const buttonLeft = ref(window.innerWidth - 100) // Start near top-right
 
 const threshold = 100 // px distance from cursor before it moves
-let delay = 500 // ms delay between movements
+let delay = 600 // ms delay between movements
 let lastMoveTime = 0
 
 defineEmits(['confirm', 'premium', 'close', 'redirect'])
@@ -60,7 +60,7 @@ function handleMouseMove(e) {
         buttonLeft.value = Math.max(padding, Math.min(maxLeft, newLeft))
         buttonTop.value = Math.max(padding, Math.min(maxTop, newTop))
 
-        delay += 100
+        delay += 20
         lastMoveTime = now
     }
 }
