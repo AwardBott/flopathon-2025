@@ -26,7 +26,7 @@ function setAdTimeout() {
             clearInterval(interval);
             isTimerActive.value = false;
         }
-    }, 2345);
+    }, Math.random() * 3000);
 }
 
 watch(() => isTimerActive.value, (active) => {

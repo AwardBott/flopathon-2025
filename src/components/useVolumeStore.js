@@ -27,7 +27,7 @@ export const useVolumeStore = defineStore('volumeStore',() => {
   const selectedCardInfo = ref(null);
 
   function setAdTimeout() {
-    const timerAmount = userIsPremium ? 15000 : 10000;
+    const timerAmount = userIsPremium.value ? 15000 : 10000;
     currentTimer.value = timerAmount;
     isTimerActive.value = true;
     setTimeout(() => {
