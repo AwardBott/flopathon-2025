@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="modal-backdrop" @click.self="$emit('redirect')">
-        <div class="modal" @click.self="$emit('redirect')">
-            <button class="close-button" @click="$emit('close')">×</button>
+        <div class="modal" @mousemove="handleMouseMove" @click.self="$emit('redirect')">
+            <button class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="$emit('close')">×</button>
 
             <h1>Changing volume is Premium!</h1>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>
@@ -14,6 +14,15 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
+const buttonTop = ref(50)
+const buttonLeft = ref(window.innerWidth - 100) // Start near top-right
+
+const threshold = 100 // px distance from cursor before it moves
+let delay = 500 // ms delay between movements
+let lastMoveTime = 0
+
 defineEmits(['confirm', 'premium', 'close', 'redirect'])
 
 defineProps({
@@ -22,6 +31,40 @@ defineProps({
         default: false,
     }
 })
+
+function handleMouseMove(e) {
+    const now = Date.now()
+    if (now - lastMoveTime < delay) return
+
+    const cursorX = e.clientX
+    const cursorY = e.clientY
+
+    const btnX = buttonLeft.value + 16
+    const btnY = buttonTop.value + 16
+
+    const dx = cursorX - btnX
+    const dy = cursorY - btnY
+    const distance = Math.sqrt(dx * dx + dy * dy)
+
+    if (distance < threshold) {
+        let newLeft = buttonLeft.value - dx * 0.7 + (Math.random() - 0.5) * 800
+        let newTop = buttonTop.value - dy * 0.7 + (Math.random() - 0.5) * 800
+
+        // Clamp to screen bounds (window.innerWidth / innerHeight)
+        const buttonSize = 40
+        const padding = 10
+
+        const maxLeft = window.innerWidth - buttonSize - padding
+        const maxTop = window.innerHeight - buttonSize - padding
+
+        buttonLeft.value = Math.max(padding, Math.min(maxLeft, newLeft))
+        buttonTop.value = Math.max(padding, Math.min(maxTop, newTop))
+
+        delay += 100
+        lastMoveTime = now
+    }
+}
+
 </script>
 
 <style scoped>
@@ -57,14 +100,15 @@ defineProps({
 }
 
 .close-button {
-    position: relative;
-    top: 10px;
-    right: -285px;
-    background: transparent;
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
     border: none;
-    font-size: 24px;
-    line-height: 1;
+    background: #eee;
+    color: #333;
+    border-radius: 50%;
     cursor: pointer;
-    color: black;
+    z-index: 9999;
+    transition: top 0.5s ease, left 0.5s ease;
 }
 </style>
