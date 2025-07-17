@@ -3,11 +3,11 @@
         <div class="modal" @mousemove="handleMouseMove" @click.self="$emit('redirect')">
             <button class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="$emit('close')">×</button>
 
-            <h1>Changing volume is Premium!</h1>
+            <h2>Changing volume is Premium!</h2>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>
             <div class="modal-buttons">
-                <button @click="$emit('confirm')">Watch 30s ad</button>
-                <button v-if="!userIsPremium" @click="$emit('premium')">I want Premium! (10 points)</button>
+                <button class="ad-button" @click="$emit('confirm')">Watch ad <span class="button-text-right">(30 seconds)</span></button>
+                <button class="premium-button" v-if="!userIsPremium" @click="$emit('premium')"> I want Premium! <span class="button-text-right"><i class="ph-fill ph-coins"></i>10 points</span></button>
             </div>
         </div>
     </div>
@@ -86,12 +86,18 @@ function handleMouseMove(e) {
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .modal-buttons {
     margin-top: 15px;
     display: flex;
     justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .modal-buttons button {
@@ -110,5 +116,33 @@ function handleMouseMove(e) {
     cursor: pointer;
     z-index: 9999;
     transition: top 0.5s ease, left 0.5s ease;
+}
+.ad-button {
+  border-radius: 8px;
+  border: 2px solid gray;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.premium-button {
+  border-radius: 8px;
+  border: 2px solid orange;
+  background: transparent;
+  color: orange;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.button-text-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 </style>

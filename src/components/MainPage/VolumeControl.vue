@@ -5,8 +5,7 @@
             <p class="video-text">Video Placeholder</p>
         </div>
 
-        <div class="controls"                 @mousedown="openModal"
-        >
+        <div class="controls" @mousedown="openModal">
             <label for="volume">Volume</label>
             <input
                 type="range"
@@ -14,6 +13,7 @@
                 max="100"
                 step="1"
                 :value="volume"
+                @click="(e) => handleVolumeInput(e.target.value)"
             />
             <span>{{ Math.round(volume) }}%</span>
         </div>
@@ -51,6 +51,16 @@ function confirmVolumeChange() {
     isViewingAd.value = true;
 }
 
+
+
+function getRandomNumber(bottomValue, topValue) {
+  if (bottomValue > topValue) {
+    [bottomValue, topValue] = [topValue, bottomValue]; // Swap them
+  }
+  const range = topValue - bottomValue + 1;
+  return Math.floor(Math.random() * range) + bottomValue;
+}
+
 function onClickPremium() {
     window.open('https://buy.stripe.com/test_3cIdRa7uh1ew5yWc046AM00', '_blank')
     showModal.value = false;
@@ -60,6 +70,14 @@ function onClickPremium() {
 
 const missedCloseButton = () => {
     window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1', '_blank')
+}
+
+function handleVolumeInput(newVolume) {
+  if(userIsPremium.value) {
+    const min = Math.floor(newVolume - (newVolume *.3))
+    const max = Math.ceil(Math.min(newVolume + (newVolume *.3), 100))
+    volume.value = getRandomNumber(min, max);
+  }
 }
 
 
