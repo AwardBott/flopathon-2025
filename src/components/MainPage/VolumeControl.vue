@@ -21,20 +21,29 @@
             v-if="showModal"
             @confirm="confirmVolumeChange"
             @premium="onClickPremium"
+            @close="showModal = false"
         />
+        <premium-modal v-if="showPremiumModal" @close="showPremiumModal = false" />
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 
-import AdModal from './AdModal.vue'
+import AdModal from './AdModal.vue';
+import PremiumModal from '@/components/MainPage/PremiumModal.vue';
+import { useVolumeStore } from '@/components/useVolumeStore.js';
 
-const volume = ref(100)
+const volume = ref(0)
 const showModal = ref(false)
+const showPremiumModal = ref(false);
+
+const store = useVolumeStore()
+const { userIsPremium } = storeToRefs(store);
 
 const openModal = () => {
-    volume.value = 100;
+    volume.value = 0;
     showModal.value = true;
 }
 
@@ -45,7 +54,12 @@ function confirmVolumeChange() {
 
 function onClickPremium() {
     window.open('https://buy.stripe.com/test_3cIdRa7uh1ew5yWc046AM00', '_blank')
+    showModal.value = false;
+    userIsPremium.value = true;
+    showPremiumModal.value = true;
 }
+
+
 </script>
 
 <style scoped>

@@ -1,6 +1,8 @@
 ﻿<template>
     <div class="modal-backdrop">
         <div class="modal">
+            <button class="close-button" @click="$emit('close')">×</button>
+
             <h1>Changing volume is Premium!</h1>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>
             <div class="modal-buttons">
@@ -12,7 +14,7 @@
 </template>
 
 <script setup>
-defineEmits(['confirm', 'premium'])
+defineEmits(['confirm', 'premium', 'close'])
 </script>
 
 <style scoped>
@@ -45,5 +47,17 @@ defineEmits(['confirm', 'premium'])
 .modal-buttons button {
     padding: 8px 16px;
     font-size: 1rem;
+}
+
+.close-button {
+    position: relative;
+    top: 10px;
+    right: -285px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: black;
 }
 </style>
