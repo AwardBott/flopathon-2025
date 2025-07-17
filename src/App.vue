@@ -1,5 +1,8 @@
 <script setup>
 import { RouterLink, RouterView, useRouter } from 'vue-router'
+import {useVolumeStore} from '@/components/useVolumeStore.js'
+
+const store = useVolumeStore();
 
 const router = useRouter()
 const routes = router.options.routes

@@ -1,4 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import {useVolumeStore} from '@/components/useVolumeStore.js'
+import WatchAd from '../components/MainPage/WatchAd.vue'
+
 
 const componentFiles = import.meta.glob('../components/*.vue')
 
@@ -27,13 +30,32 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../components/HomeView.vue'),
+      component: () => ('../components/HomeView.vue'),
       meta: {
         displayName: 'Home',
       },
     },
+    {
+      path: '/ad',
+      name: 'ad',
+      component: WatchAd,
+      meta: {
+        displayName: 'Advertisement',
+      }
+    },
     ...dynamicRoutes,
   ],
+})
+router.beforeEach((to, from, next) => {
+  const store = useVolumeStore()
+  if (store.isViewingAd) {
+    if (to.path === '/ad') {
+    } else {
+      next('/ad');
+    }
+  } else {
+    next();
+  }
 })
 
 export default router

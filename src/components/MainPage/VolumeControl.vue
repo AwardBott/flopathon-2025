@@ -31,8 +31,6 @@
 
 <script setup>
 import { ref } from 'vue';
-import { storeToRefs } from 'pinia';
-
 import AdModal from './AdModal.vue';
 import PremiumModal from '@/components/MainPage/PremiumModal.vue';
 import { useVolumeStore } from '@/components/useVolumeStore.js';
@@ -42,7 +40,7 @@ const showModal = ref(false)
 const showPremiumModal = ref(false);
 
 const store = useVolumeStore()
-const { userIsPremium } = storeToRefs(store);
+const { userIsPremium, isViewingAd } = storeToRefs(store);
 
 const openModal = () => {
     volume.value = 0;
@@ -51,7 +49,7 @@ const openModal = () => {
 
 function confirmVolumeChange() {
     showModal.value = false
-    alert("Confirmed volume change")
+    isViewingAd.value = true;
 }
 
 function onClickPremium() {
