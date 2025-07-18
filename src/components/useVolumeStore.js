@@ -9,6 +9,8 @@ export const useVolumeStore = defineStore('volumeStore',() => {
   const userIsPremium = ref(false);
   const isViewingAd = ref(false);
   const volume = ref(0);
+  const isTimerActive = ref(false);
+  const currentTimer = ref(null);
 
   watch(isViewingAd, (newValue) => {
     if (isViewingAd.value) {
@@ -25,10 +27,14 @@ export const useVolumeStore = defineStore('volumeStore',() => {
   const selectedCardInfo = ref(null);
 
   function setAdTimeout() {
+    const timerAmount = userIsPremium.value ? 15000 : 10000;
+    currentTimer.value = timerAmount;
+    isTimerActive.value = true;
     setTimeout(() => {
       const isVolumeCloserToZero = volume.value < 50;
       volume.value = isVolumeCloserToZero ? 100 : 0;
-    }, userIsPremium ? 15000 : 10000);
+      isTimerActive.value = false;
+    }, timerAmount);
   }
 
   const clickThreshold = ref(2);
@@ -40,6 +46,8 @@ export const useVolumeStore = defineStore('volumeStore',() => {
     isViewingAd,
     volume,
     setAdTimeout,
+    isTimerActive,
+    currentTimer,
     clickThreshold,
   }
 });

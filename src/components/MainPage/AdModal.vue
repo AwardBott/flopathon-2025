@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="modal-backdrop" @click.self="$emit('redirect')">
         <div class="modal" @mousemove="handleMouseMove" @click.self="$emit('redirect')">
-            <button class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="$emit('close')">×</button>
+            <button tabindex="-1" class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="$emit('close')">×</button>
 
             <h2>Changing volume is Premium!</h2>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>

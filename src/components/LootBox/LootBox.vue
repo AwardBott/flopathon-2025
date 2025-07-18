@@ -24,8 +24,8 @@
             </div>
             <i class="loot-box__icon ph-hand-pointing"></i>
         </div>
-        <button v-if="!isFlipped || buttonDisabled" :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="spinCards">Spin!</button>
-        <button v-else :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="resetCards">Accept!</button>
+        <button v-if="!isFlipped || buttonDisabled" :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="onClick(true)">Spin!</button>
+        <button v-else :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="onClick(false)">Accept!</button>
     </div>
 </template>
 
@@ -51,7 +51,7 @@ const cardsStyle = ref({
 });
 
 const store = useVolumeStore();
-const { isFlipped, selectedCardInfo, volume } = storeToRefs(store);
+const { isFlipped, selectedCardInfo, volume, clickThreshold } = storeToRefs(store);
 
 const RARITIES = Object.freeze({
     COMMON: 'Common',
@@ -186,6 +186,21 @@ onMounted(() => {
         initialCards.value.push({ id: i + 1, ...generateCardData() });
     }
 });
+
+const clickCount = ref(0);
+const onClick = (isSpin) => {
+    clickCount.value += 1;
+    if (clickCount.value === clickThreshold.value) {
+        clickCount.value = 0;
+        clickThreshold.value += 2;
+        if (isSpin) {
+            spinCards()
+        }
+        else {
+            resetCards();
+        }
+    }
+}
 
 </script>
 
