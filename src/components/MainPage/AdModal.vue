@@ -5,10 +5,10 @@
 
             <h2>Changing volume is Premium!</h2>
             <p>Watch a 30s ad to change your volume, or purchase Premium for more volume control benefits!</p>
-            <div class="modal-buttons">
+            <click-combo-counter class="modal-buttons" :click-count="clickCount" :k-o="clickThreshold">
                 <button class="ad-button" @click="onClick('confirm')">Watch ad <span class="button-text-right">(30 seconds)</span></button>
                 <button class="premium-button" v-if="!userIsPremium" @click="onClick('premium')"> I want Premium! <span class="button-text-right"><i class="ph-fill ph-coins"></i>10 points</span></button>
-            </div>
+            </click-combo-counter>
         </div>
     </div>
 </template>
@@ -18,6 +18,7 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia';
 
 import {useVolumeStore} from '@/components/useVolumeStore.js';
+import ClickComboCounter from '@/components/LootBox/ClickComboCounter.vue';
 
 const buttonTop = ref(50)
 const buttonLeft = ref(window.innerWidth - 100) // Start near top-right
@@ -102,18 +103,17 @@ const onClick = (event) => {
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .modal-buttons {
     margin-top: 15px;
     display: flex;
     justify-content: space-around;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .modal-buttons button {

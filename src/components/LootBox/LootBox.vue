@@ -1,31 +1,56 @@
 
 <template>
     <div class="loot-box">
-        <div class="loot-box-header">
-            <h1>Loot Box</h1>
-        </div>
+        <div class="loot-box__background">
+            {{ funnyText.slice(0, 5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ funnyText }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ funnyText.slice(20, 50) }}
+            {{ funnyText }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ funnyText }}
+            {{ funnyText }}
+       </div>
         <div class="loot-box__cards-container">
             <div class="loot-box__cards" :style="cardsStyle">
-                <loot-box-card
-                    v-for="(initialCard, index) in initialCards"
-                    :index="index"
-                    :key="initialCard.id"
-                    :rarity="initialCard.rarity"
-                    :volume="initialCard.volume"
-                />
                 <loot-box-card
                     v-for="(card, index) in cards"
                     :index="index"
                     :key="card.id"
-                    :rarity="buttonDisabled ? getFakeRarity().rarity : card.rarity"
-                    :volume="buttonDisabled ? getFakeRarity().volume : card.volume"
+                    :rarity="buttonDisabled ? card.fake.rarity : card.rarity"
+                    :volume="buttonDisabled ? card.fake.volume : card.volume"
                     :winningIndex="winningIndex"
                 />
             </div>
-            <i class="loot-box__icon ph-hand-pointing"></i>
+            <i class="loot-box__icon ph-fill ph-hand-pointing"></i>
         </div>
-        <button v-if="!isFlipped || buttonDisabled" :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="onClick(true)">Spin!</button>
-        <button v-else :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]" @click="onClick(false)">Accept!</button>
+        <click-combo-counter
+            v-if="!isFlipped || buttonDisabled"
+            class="loot-box__combo"
+            :click-count="clickCount"
+            :k-o="clickThreshold"
+        >
+            <button
+                :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]"
+                @click="onClick(true)"
+            >
+                Spin!
+            </button>
+        </click-combo-counter>
+        <click-combo-counter
+            v-else
+            class="loot-box__combo"
+            :click-count="clickCount"
+            :k-o="clickThreshold"
+        >
+            <button
+                :class="['loot-box__spin-button', { 'is-disabled': buttonDisabled }]"
+                @click="onClick(false)"
+            >
+                Accept!
+            </button>
+        </click-combo-counter>
     </div>
 </template>
 
@@ -36,14 +61,14 @@ import { useRouter } from 'vue-router';
 
 import LootBoxCard from '@/components/LootBox/LootBoxCard.vue';
 import { useVolumeStore } from '@/components/useVolumeStore.js';
+import ClickComboCounter from '@/components/LootBox/ClickComboCounter.vue';
 
-const cardCount = 50;
+const cardCount = 75; // Set the desired number of cards
 const cardWidth = 320;
 const cardGap = 24;
 
 const router = useRouter();
 
-const initialCards = ref([]);
 const cards = ref([]);
 const cardsStyle = ref({
     transform: 'translateX(0)',
@@ -68,24 +93,22 @@ const generateCardData = () => {
     const random = Math.random();
     let rarity, volume;
 
+    const fakeData = getFakeRarity();
+
     if (random < 0.01) {
-        // 3% chance for Legendary (best volume)
         rarity = RARITIES.LEGENDARY;
         volume = Math.floor(Math.random() * 11) + 45; // 45-55
     } else if (random < 0.05) {
-        // 12% chance for Rare (good volume)
         rarity = RARITIES.RARE;
         volume = Math.floor(Math.random() * 16) + 55; // 55-70
     } else if (random < 0.40) {
-        // 25% chance for Uncommon (decent volume)
         rarity = RARITIES.UNCOMMON;
         volume = Math.floor(Math.random() * 26) + 75; // 75-100
     } else {
-        // 60% chance for Common (annoying volume)
         rarity = RARITIES.COMMON;
         volume = Math.floor(Math.random() * 25) + 1; // 1-25
     }
-    return { rarity, volume };
+    return { rarity, volume, fake: fakeData };
 };
 
 const getFakeRarity = () => {
@@ -93,45 +116,48 @@ const getFakeRarity = () => {
     let rarity, volume;
 
     if (random < 0.20) {
-        // 3% chance for Legendary (best volume)
         rarity = RARITIES.LEGENDARY;
         volume = Math.floor(Math.random() * 11) + 45; // 45-55
     } else if (random < 0.40) {
-        // 12% chance for Rare (good volume)
         rarity = RARITIES.RARE;
         volume = Math.floor(Math.random() * 16) + 55; // 55-70
     } else if (random < 0.60) {
-        // 25% chance for Uncommon (decent volume)
         rarity = RARITIES.UNCOMMON;
         volume = Math.floor(Math.random() * 26) + 75; // 75-100
     } else {
-        // 60% chance for Common (annoying volume)
         rarity = RARITIES.COMMON;
         volume = Math.floor(Math.random() * 25) + 1; // 1-25
     }
     return { rarity, volume };
 }
 
+const funnyText = getFakeRarity.toString();
+
+const populateCards = () => {
+    const newCards = [];
+    for (let i = 0; i < cardCount; i++) {
+        newCards.push({ id: i + 1, ...generateCardData() });
+    }
+    cards.value = newCards;
+};
+
 const spinCards = () => {
     if (buttonDisabled.value) return;
     buttonDisabled.value = true;
-    for (let i = 0; i < cardCount; i++) {
-        cards.value.push({ id: i + 1, ...generateCardData() });
-    }
+    populateCards(); // Generate new cards for the spin
 
     isFlipped.value = true;
 
     setTimeout(() => {
         const containerWidth = 800;
-        const winningCardIndex = 25;
+        const winningCardIndex = Math.floor(cardCount / 2); // Center card is the winner
 
-        const totalWinningIndex = initialCards.value.length + winningCardIndex;
-        const winningCardCenter = (totalWinningIndex * (cardWidth + cardGap)) + (cardWidth / 2);
+        const winningCardCenter = (winningCardIndex * (cardWidth + cardGap)) + (cardWidth / 2);
         const finalTranslateX = (containerWidth / 2) - winningCardCenter;
 
         const spinDistance = 1000;
-
         const startTranslateX = finalTranslateX + spinDistance;
+
         cardsStyle.value = {
             transform: `translateX(${startTranslateX}px)`,
             transition: 'none'
@@ -143,7 +169,6 @@ const spinCards = () => {
                 transition: 'transform 5s cubic-bezier(0.1, 0.8, 0.2, 1)'
             };
 
-            // Enable the button after the animation completes (5 seconds)
             setTimeout(() => {
                 buttonDisabled.value = false;
                 winningIndex.value = winningCardIndex;
@@ -161,34 +186,27 @@ const resetCards = () => {
     store.setAdTimeout();
     router.push('/');
     winningIndex.value = -1;
-    let cardData = [];
-     for (let i = 0; i < 4; i++) {
-        cardData.push({ id: i + 1, ...generateCardData() });
-    }
-    initialCards.value = cardData;
 
     setTimeout(() => {
-        cardsStyle.value.transition = 'transform 0.5s ease';
         cardsStyle.value = {
             transform: 'translateX(0)',
-            transition: 'none'
+            transition: 'transform 0.5s ease'
         };
     }, 500);
 
     setTimeout(() => {
-        cards.value = [];
+        populateCards(); // Generate a new set of cards for the next round
         buttonDisabled.value = false;
     }, 1000);
 }
 
 onMounted(() => {
-    for (let i = 0; i < 4; i++) {
-        initialCards.value.push({ id: i + 1, ...generateCardData() });
-    }
+    populateCards();
 });
 
 const clickCount = ref(0);
 const onClick = (isSpin) => {
+    if (buttonDisabled.value) return;
     clickCount.value += 1;
     if (clickCount.value === clickThreshold.value) {
         clickCount.value = 0;
@@ -201,7 +219,6 @@ const onClick = (isSpin) => {
         }
     }
 }
-
 </script>
 
 <style scoped>
@@ -263,10 +280,60 @@ const onClick = (isSpin) => {
     justify-content: center;
     margin-top: 10px;
     font-size: 50px;
+    background-color: #EFBF04;
 }
 
 .is-disabled {
     background-color: #ccc; /* gray */
     cursor: not-allowed;
+}
+
+.loot-box__combo {
+    margin: 20px auto;
+}
+
+.loot-box__background {
+    font-size: 50px;
+    position: absolute;
+    overflow-y: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    background: repeating-linear-gradient(
+        135deg,
+        #f0f0f0,
+        #f0f0f0 10px,
+        #dcdcdc 10px,
+        #dcdcdc 20px
+    );
+    background-size: 200% 200%;
+    opacity: 0.5;
+    z-index: -1;
+    animation: moveBackground 40s linear infinite;
+}
+
+.loot-box__background .ph-hand-pointing {
+    display: inline-block; /* Required for transform */
+    animation: glitch-rotate 2s linear infinite;
+}
+
+@keyframes moveBackground {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 -100%;
+    }
+}
+
+@keyframes glitch-rotate {
+    0%, 49.9%, 75%, 100% {
+        transform: rotate(0deg);
+    }
+    50%, 74.9% {
+        transform: rotate(15deg);
+    }
 }
 </style>
