@@ -9,7 +9,9 @@ const {isViewingAd} = storeToRefs(useVolumeStore())
 
 const selectedVideo = ref(null)
 const videoRef = ref(null)
-const showExitIcon = ref(false)
+const showExitIcon = ref(false);
+const duration = ref(0);
+let countdownInterval = null;
 
 const randomVideo = () => {
   const allVideos = [sizzler, constipation]
@@ -24,11 +26,26 @@ onMounted(() => {
   selectedVideo.value = randomVideo()
 })
 
-watch(selectedVideo, () => {
+const startCountdown = () => {
+  // Clear any existing interval to prevent multiple intervals running
+  clearInterval(countdownInterval);
+  countdownInterval = setInterval(() => {
+    if (duration.value > 0) {
+      duration.value--;
+    } else {
+      clearInterval(countdownInterval); // Stop the countdown when it reaches zero
+      showExitIcon.value = true; // Optionally show the exit icon when countdown finishes
+    }
+  }, 1000); // Update every 1000ms (1 second)
+};
+
+
+watch(selectedVideo, (newVideo) => {
   if (videoRef.value) {
-    console.log('watching video', videoRef.value.controls)
     setTimeout(() => {
       videoRef.value.play()
+      duration.value = Math.ceil(videoRef.value.duration);
+      startCountdown()
     }, 200)
   }
 })
@@ -83,6 +100,7 @@ function handleMouseMove(e) {
 <template>
   <div class="ad-page" @mousemove="handleMouseMove" @click.self="missedCloseButton">
       <button v-if="showExitIcon" tabindex="-1" class="close-button" :style="{ top: buttonTop + 'px', left: buttonLeft + 'px', position: 'fixed' }" @click="isViewingAd = false">×</button>
+    <span v-else class="duration-text">{{duration}}</span>
     <video ref="videoRef" :key="selectedVideo" :src="selectedVideo" @ended="videoHasEnded" />
   </div>
 </template>
@@ -121,5 +139,13 @@ video {
     cursor: pointer;
     z-index: 9999;
     transition: top 0.5s ease, left 0.5s ease;
+}
+
+.duration-text {
+  z-index: 9999;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
 }
 </style>
