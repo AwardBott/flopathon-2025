@@ -2,7 +2,8 @@
     <div class="video-container">
         <div class="video-box">
             <!-- Replace this with canvas or background image if needed -->
-            <p class="video-text">Video Placeholder</p>
+            <video ref="videoRef" class="video" :src="heimlechVideo" :volume="calculatedVolume" />
+            <i v-if="showPlayButton"  class="ph ph-play play-button" @click="playVideo" />
         </div>
 
         <div class="controls" @mousedown="openModal">
@@ -30,14 +31,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 import AdModal from './AdModal.vue';
 import PremiumModal from '@/components/MainPage/PremiumModal.vue';
 import { useVolumeStore } from '@/components/useVolumeStore.js';
+import heimlechVideo from '@/assets/heimlech.mp4'
 
 const showModal = ref(false)
 const showPremiumModal = ref(false);
+const videoRef = ref(null);
 
 const { userIsPremium, isViewingAd, volume } = storeToRefs(useVolumeStore());
 
@@ -51,7 +54,7 @@ function confirmVolumeChange() {
     isViewingAd.value = true;
 }
 
-
+const calculatedVolume = computed(() => +volume.value / 100)
 
 function getRandomNumber(bottomValue, topValue) {
   if (bottomValue > topValue) {
@@ -68,16 +71,24 @@ function onClickPremium() {
     showPremiumModal.value = true;
 }
 
+const showPlayButton = ref(true);
+
 const missedCloseButton = () => {
     window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1', '_blank')
 }
 
 function handleVolumeInput(newVolume) {
+  console.log('clickee')
   if(userIsPremium.value) {
     const min = Math.floor(newVolume - (newVolume *.3))
     const max = Math.ceil(Math.min(newVolume + (newVolume *.3), 100))
     volume.value = getRandomNumber(min, max);
   }
+}
+
+function playVideo() {
+  videoRef.value.play()
+  showPlayButton.value = false;
 }
 
 
@@ -94,7 +105,6 @@ function handleVolumeInput(newVolume) {
 }
 
 .video-box {
-    height: 540px;
     background-color: #222;
     display: flex;
     justify-content: center;
@@ -103,9 +113,8 @@ function handleVolumeInput(newVolume) {
     font-size: 1.5rem;
 }
 
-.video-text {
-    pointer-events: none;
-    user-select: none;
+.video {
+  width: 100%;
 }
 
 .controls {
@@ -119,5 +128,12 @@ function handleVolumeInput(newVolume) {
 
 input[type="range"] {
     flex-grow: 1;
+}
+
+.play-button {
+  z-index: 100;
+  font-size: 120px;
+  position: absolute;
+  cursor: pointer;
 }
 </style>
