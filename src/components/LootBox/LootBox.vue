@@ -2,16 +2,167 @@
 <template>
     <div class="loot-box">
         <div class="loot-box__background">
-            {{ funnyText.slice(0, 5) }}
+            {{ scrambledText(5) }}
             <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
-            {{ funnyText }}
+            {{ scrambledText() }}
             <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
-            {{ funnyText.slice(20, 50) }}
-            {{ funnyText }}
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
             <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
-            {{ funnyText }}
-            {{ funnyText }}
-       </div>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(17) }}
+            {{ scrambledText() }}
+            <i v-for="i in 7" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(35) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 5" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(17) }}
+            {{ scrambledText() }}
+            <i v-for="i in 7" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(35) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 5" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(17) }}
+            {{ scrambledText() }}
+            <i v-for="i in 7" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(35) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 5" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(17) }}
+            {{ scrambledText() }}
+            <i v-for="i in 7" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(35) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 5" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(5) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(17) }}
+            {{ scrambledText() }}
+            <i v-for="i in 7" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            {{ scrambledText(35) }}
+            <i v-for="i in 4" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+            <i v-for="i in 5" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText(30) }}
+            {{ scrambledText() }}
+            <i v-for="i in 10" :key="i" class="ph-fill ph-hand-pointing"></i>
+            {{ scrambledText() }}
+        </div>
         <div class="loot-box__cards-container">
             <div class="loot-box__cards" :style="cardsStyle">
                 <loot-box-card
@@ -132,6 +283,18 @@ const getFakeRarity = () => {
 }
 
 const funnyText = getFakeRarity.toString();
+
+const scrambledText = (length = 0) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+    const len = length || Math.floor(Math.random() * 30) + 10;
+    let result = '';
+
+    for (let i = 0; i < len; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+
+    return result;
+};
 
 const populateCards = () => {
     const newCards = [];
